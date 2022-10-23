@@ -12,7 +12,6 @@ except ImportError:
 
 
 HOME = os.environ.get('HOME')
-
 TERMINAL_ANSI_COLORS = ["black","red","green","yellow","blue","magenta","cyan","white"]
 
 def get_alacritty_colours(theme_path):
@@ -41,18 +40,47 @@ def alacritty_to_wal(alacritty_theme):
         wal_data["colors"][f"color{8+i}"] = bright_colors[color]
     return wal_data
 
+def usage():
+    print("""
+omnitheme.py [option]... [theme_name]
+
+theme_name is the name of a colour theme yml file in your Alacritty themes dir (without the extensions).
+
+option is one or many of:
+    -r, --restore           Apply the currently cached theme, aka the last one you loaded. Useful to restore theme after loading the window manager. Doesn't require a theme_name argument.
+    -h, --help              Display this help.
+          """)
+
 try:
-    opts, args = getopt.getopt(sys.argv[1:],"",[])
+    opts, args = getopt.getopt(sys.argv[1:],"rh",["restore","help"])
 except getopt.GetoptError:
-    print('omnitheme.py [theme_name]')
+    usage()
     sys.exit(2)
 
-print(opts)
-print(args)
+RESTORE_MODE = False
+THEME_NAME = ""
+
+for opt, value in opts:
+    if opt in ["-h", "--help"]:
+        usage()
+        sys.exit(0)
+    elif opt in ["-r", "--restore"]:
+        RESTORE_MODE = True
+
+# Restore mode, reload env and exit
+if RESTORE_MODE:
+    pywal.reload.env()
+    sys.exit(0)
+
+# Normal mode, read from alacritty theme
+if len(args) != 1:
+    print("You must provide a theme name")
+    usage()
+    sys.exit(2)
 theme_name = args[0]
 alacritty_colours = get_alacritty_colours(f'{HOME}/.config/alacritty/themes/{theme_name}.yml')
 colors = alacritty_to_wal(alacritty_colours)
-print(colors)
-#Export all template files.
+
 pywal.export.every(colors, f"{HOME}/.cache/wal")
+
 pywal.reload.env()
