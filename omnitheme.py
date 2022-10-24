@@ -5,6 +5,21 @@ import os
 import sys
 import getopt
 
+"""
+TODO
+- -c/--colours primary,secondary option (i.e. omnitheme -c green,cyan theme_name => apply the theme with green primary and cyan secondary). The given colours will be used as background, and the foreground should be picked between black and white depending on highest contrast (compute it).
+- -a/--automatic => automatically picks primary and secondary. Algorithm TBD. Idea: sort by contrast to the background, and pick the primary closest to "ideal contrast". Then do the same with the secondary, ideal contrast to primary this time (with contrast to background in a given range)
+- Interactive mode : display all themes in the terminal, and apply the theme as a preview on the fly (i.e. after 1s stop on the theme name). On cancel, rollback to previous theme (=> need to store current theme somewhere in cache first)
+- Random mode : picks a random theme in a given list (as a value if given, if not read from a config file => handle a omnitheme.conf) 
+
+omnitheme_schedule wrapper:
+runs omnitheme with given options at certains times (with a cron?). You provide a config file and the cli is just there to manage the cron (create, remove, update with new config file).
+The config file should give direct access to cron parameters, and maybe propose a few helpers like AM, PM, MONDAY, TUESDAY...
+
+Could be handled with a -s/--schedule [config] option.
+If a schedule is enabled, at any execution time, the restore mode (omnitheme -r) should refresh the theme depending on the time of execution.
+"""
+
 try:
     from yaml import CLoader as Loader
 except ImportError:
