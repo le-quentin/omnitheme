@@ -23,17 +23,23 @@ def get_alacritty_colours(theme_path):
 
 
 def alacritty_to_wal(alacritty_theme):
+    normal_colors = alacritty_theme["normal"]
+    bright_colors = alacritty_theme["bright"]
     wal_data = {}
     wal_data["wallpaper"] = "None"
     wal_data["alpha"] = pywal.theme.util.Color.alpha_num
 
     wal_data["special"] = {
-        "foreground": alacritty_theme["primary"]["foreground"],
         "background": alacritty_theme["primary"]["background"],
-        "cursor": "cursor" in alacritty_theme and alacritty_theme["cursor"]["cursor"] or alacritty_theme["bright"]["yellow"]
+        "background_variant": normal_colors["black"],
+        "foreground": alacritty_theme["primary"]["foreground"],
+        "cursor": "cursor" in alacritty_theme and alacritty_theme["cursor"]["cursor"] or alacritty_theme["bright"]["yellow"],
+
+        "primary_background": bright_colors["green"],
+        "primary_foreground": normal_colors["black"],
+        "secondary_background": bright_colors["cyan"],
+        "secondary_foreground": normal_colors["black"]
     }
-    normal_colors = alacritty_theme["normal"]
-    bright_colors = alacritty_theme["bright"]
     wal_data["colors"] = { }
     for i, color  in enumerate(TERMINAL_ANSI_COLORS):
         wal_data["colors"][f"color{i}"] = normal_colors[color]
