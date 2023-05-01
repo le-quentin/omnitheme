@@ -49,6 +49,7 @@ def alacritty_to_wal(alacritty_theme):
         "background_variant": normal_colors["black"],
         "foreground": alacritty_theme["primary"]["foreground"],
         "cursor": "cursor" in alacritty_theme and alacritty_theme["cursor"]["cursor"] or alacritty_theme["bright"]["yellow"],
+        "cursor_text": "cursor" in alacritty_theme and alacritty_theme["cursor"]["text"] or alacritty_theme["normal"]["black"],
 
         "primary_background": bright_colors["green"],
         "primary_foreground": normal_colors["black"],
